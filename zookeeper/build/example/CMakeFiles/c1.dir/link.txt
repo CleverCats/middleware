@@ -1,0 +1,1 @@
+/usr/bin/c++     CMakeFiles/c1.dir/c_1.cxx.o  -o ../../example/c1   -L/home/net_learn/zookeeper_study/lib  -Wl,-rpath,/home/net_learn/zookeeper_study/lib -lzookeeper_mt -lpthread ../../lib/libzksync.so -lzookeeper_mt -lpthread 

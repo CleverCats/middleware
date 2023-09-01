@@ -1,0 +1,30 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/net_learn/zookeeper_study/src/zk_sync.cxx
+pthread.h
+-
+algorithm
+-
+zk_sync.h
+/home/net_learn/zookeeper_study/src/zk_sync.h
+
+/home/net_learn/zookeeper_study/src/zk_sync.h
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+unistd.h
+-
+iostream
+-
+zookeeper/zookeeper.h
+-
+
