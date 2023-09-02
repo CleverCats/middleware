@@ -18,7 +18,7 @@
 # 链接
     - .L./lib 
     - .I./src 
-    
+
 # 接口
     - #include "zk_sync.h"
 ```cpp
@@ -28,9 +28,6 @@
         @param timout: 会话超时时间(毫秒)
     */
     ZookeeperClient(const char *host, int timout = 30000);
-
-    // 关闭zookeeper客户端
-    ~ZookeeperClient();
 
     /*
         brief 创建持久化节点
