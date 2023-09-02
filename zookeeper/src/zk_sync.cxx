@@ -128,26 +128,9 @@ void ZookeeperClient::lock_watcher(zhandle_t *zh, int type, int state, const cha
     }
 }
 
-void ZookeeperClient::lock(std::string lockpath)
+bool ZookeeperClient::check_lock(std::thread::id tid, std::string lockpath)
 {
-    // 创建一个名为LOCK_PATH/lock-的临时顺序节点，数据为空
-    char buffer[128];                // 用于存储实际创建的节点路径
-    int buffer_len = sizeof(buffer); // 用于存储节点路径的长度
-    if (lock_node_path == "")
-    {
-        std::cout<<"lock_node_path empty"<<std::endl;
-        int ret = zoo_create(zh, (lockpath + "/lock-").c_str(), "", 0, &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL | ZOO_SEQUENCE, buffer, buffer_len);
-
-        if (ret != ZOK)
-        {
-            fprintf(stderr, "Failed to create lock node: %s\n", zerror(ret));
-            exit(-1);
-        }
-
-        lock_node_path.append(buffer);
-        printf("Created lock node %s successfully.\n", buffer);
-    }
-
+    std::string lock_node_path = lock_thread_id.find(tid)->second;
     // 获取LOCK_PATH下所有子节点，并按照编号排序
     struct String_vector children; // 用于存储子节点名称的数组
 
@@ -169,15 +152,12 @@ void ZookeeperClient::lock(std::string lockpath)
 
     // 判断自己创建的子节点是否是编号最小的那个，如果是，则获得锁
     char *my_node;
-    if(lock_node_path == "")
-        my_node = buffer + lockpath.length() + 1; // 去掉父节点路径和斜杠，得到自己创建的子节点名称
-    else
-        my_node = (char *)lock_node_path.c_str() + lockpath.length() + 1; // 去掉父节点路径和斜杠，得到自己创建的子节点名称   
+    my_node = (char *)lock_node_path.c_str() + lockpath.length() + 1; // 去掉父节点路径和斜杠，得到自己创建的子节点名称
 
     if (strcmp(my_node, children.data[0]) == 0)
     {
-        std::cout<<"Got the lock: "<<lock_node_path<<std::endl;
-        return;
+        std::cout << "Got the lock: " << lock_node_path << std::endl;
+        return true;
     }
 
     // 如果不是，则对排在自己前面的那个子节点进行监听，等待其被删除后重新判断是否获得锁
@@ -214,6 +194,13 @@ void ZookeeperClient::lock(std::string lockpath)
 
     if (ret != ZOK)
     {
+        if(ret == ZNONODE)
+        {
+            // 销毁互斥锁和条件变量
+            pthread_mutex_destroy(&mutex);
+            pthread_cond_destroy(&cond);
+            return true;
+        }
         fprintf(stderr, "Failed to watch the previous node: %s\n", zerror(ret));
         exit(-1);
     }
@@ -227,22 +214,67 @@ void ZookeeperClient::lock(std::string lockpath)
     pthread_mutex_destroy(&mutex);
     pthread_cond_destroy(&cond);
 
+    return false;
+}
+
+void ZookeeperClient::lock(std::string lockpath)
+{
+
+    // 获取当前线程的ID
+    std::thread::id tid = std::this_thread::get_id();
+
+    // 判断当前线程是否已经获取了锁
+    if (lock_thread_id.find(tid) != lock_thread_id.end())
+    {
+        std::string lock_node_path = lock_thread_id.find(tid)->second;
+        std::cout << "Reentered the lock: " << lock_node_path << std::endl;
+        return;
+    }
+
+    // 创建一个名为LOCK_PATH/lock-的临时顺序节点，数据为空
+    char buffer[128];                // 用于存储实际创建的节点路径
+    int buffer_len = sizeof(buffer); // 用于存储节点路径的长度
+
+    // std::cout<<"lock_node_path empty"<<std::endl;
+    int ret = zoo_create(zh, (lockpath + "/lock-").c_str(), "", 0, &ZOO_OPEN_ACL_UNSAFE, ZOO_EPHEMERAL | ZOO_SEQUENCE, buffer, buffer_len);
+
+    if (ret != ZOK)
+    {
+        fprintf(stderr, "Failed to create lock node: %s\n", zerror(ret));
+        exit(-1);
+    }
+
+    std::string lock_node_path(buffer);
+    lock_thread_id.insert(std::pair<std::thread::id, std::string>(tid, lock_node_path));
+    printf("Created lock node %s successfully.\n", buffer);
+
     std::cout << "try lock" << std::endl;
     // 重新尝试获取锁
-    lock();
+    bool is_getlock = check_lock(tid);
+    while (!is_getlock)
+    {
+        is_getlock = check_lock(tid);
+    };
+    return;
 }
 
 // 释放分布式锁
 void ZookeeperClient::unlock(std::string lockpath)
 {
-    std::cout<<"Trying to delete lock node: "<<lock_node_path<<std::endl;
 
-    int ret = zoo_delete(zh, lock_node_path.c_str(), -1);
-
-    if (ret == ZOK)
+    std::thread::id tid = std::this_thread::get_id();
+    auto zknode = lock_thread_id.find(tid);
+    if (zknode != lock_thread_id.end())
     {
-        lock_node_path = "";
-        printf("Released the lock.\n");
-        return;
+        std::string zk_delete_path = zknode->second;
+        std::cout << "Trying to delete lock node: " << zk_delete_path << std::endl;
+        lock_thread_id.erase(zknode);
+        int ret = zoo_delete(zh, zk_delete_path.c_str(), -1);
+
+        if (ret == ZOK)
+        {
+            printf("Released the lock.\n");
+            return;
+        }
     }
 }

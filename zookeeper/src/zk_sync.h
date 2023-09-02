@@ -3,6 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <mutex>
+#include <map>
+#include <thread>
 #include <iostream>
 #include <zookeeper/zookeeper.h>
 
@@ -12,8 +15,8 @@ class ZookeeperClient
 private:
     // zookeeper的句柄
     zhandle_t *zh;
-    // 锁节点
-    std::string lock_node_path;
+    // 存储每个线程获取的锁-可重入锁机制
+    std::map<std::thread::id, std::string> lock_thread_id;
     // 处理连接事件
     static void connection_watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx);
 
@@ -44,4 +47,7 @@ public:
 
     // 解锁
     void unlock(std::string lockpath = "/lock");
+private:
+    // 获取加锁条件
+    bool check_lock(std::thread::id tid, std::string lockpath = "/lock");
 };
