@@ -6,9 +6,13 @@
 
 ## zookeeper_c依赖安装
     - wget http://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz
+    - cd zookeeper-3.4.10/conf
     - cp zoo_sample.cfg zoo.cfg
     - cd zookeeper-3.4.10/src/c 
     - sudo ./configure && make && make install
+    - 若出现make抛出sprintf error编译警告则去除makefile -Werror参数重新编译
+    - apt install openjdk-11-jdk
+    - ./zookeeper-3.4.10/bin/zkServer.sh start
 
 ## 项目编译
     - mkdir build
