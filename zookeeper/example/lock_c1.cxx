@@ -5,17 +5,21 @@
 int main(int argc, char const *argv[])
 {
     ZookeeperClient zk(HOST);
-    zk.create_node("/lock", "");
+    zk.create_node("/lock","");
+    int k = 0;
     while (true)
     {
         zk.lock();
-
-        std::cout << "get lock c_2 thread" << std::endl;
-        sleep(20);
-
+        sleep(3);
+        zk.lock();
+        sleep(3);
+        zk.lock();
+        sleep(3);
+        std::cout <<++k <<" ======== c_1: get lock thread ======" << std::endl;
         zk.unlock();
     }
-
+    
+   
     /* code */
     return 0;
 }

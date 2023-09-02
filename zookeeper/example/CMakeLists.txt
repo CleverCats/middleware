@@ -1,20 +1,20 @@
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-add_executable(c1 c_1.cxx)
-add_executable(c2 c_2.cxx)
-add_executable(c3 c_3.cxx)
+add_executable(crud crud.cxx)
+add_executable(lock_c1 lock_c1.cxx)
+add_executable(lock_c2 lock_c2.cxx)
 
-target_link_libraries(c1
+target_link_libraries(crud
     PUBLIC zookeeper_mt
     PUBLIC pthread
     PUBLIC zksync)
 
-target_link_libraries(c2
+target_link_libraries(lock_c1
     PUBLIC zookeeper_mt
     PUBLIC pthread
     PUBLIC zksync)
 
-target_link_libraries(c3
+target_link_libraries(lock_c2
 PUBLIC zookeeper_mt
 PUBLIC pthread
 PUBLIC zksync)

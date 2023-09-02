@@ -23,7 +23,7 @@ ZookeeperClient::~ZookeeperClient()
 }
 
 // 创建节点
-void ZookeeperClient::create_node(const char *path, const char *data)
+bool ZookeeperClient::create_node(const char *path, const char *data)
 {
     // 创建一个名为path的持久节点，数据为data
     char buffer[128];                // 用于存储实际创建的节点路径
@@ -35,14 +35,16 @@ void ZookeeperClient::create_node(const char *path, const char *data)
         int ret = zoo_create(zh, path, data, strlen(data), &ZOO_OPEN_ACL_UNSAFE, 0, buffer, buffer_len);
         if (ret == ZOK)
         {
+            return true;
             // printf("Created node %s successfully.\n", buffer);
         }
         else
         {
             fprintf(stderr, "Failed to create node: %s\n", zerror(ret));
-            exit(-1);
+            return false;
         }
     }
+    return true;
 }
 
 // 读取节点
@@ -67,7 +69,7 @@ std::string ZookeeperClient::read_node(const char *path)
 }
 
 // 更新节点
-void ZookeeperClient::update_node(const char *path, const char *data)
+bool ZookeeperClient::update_node(const char *path, const char *data)
 {
     // 更新名为path的节点的数据为data
     struct Stat stat; // 用于存储节点的元数据
@@ -75,28 +77,30 @@ void ZookeeperClient::update_node(const char *path, const char *data)
     int ret = zoo_set(zh, path, data, strlen(data), -1);
     if (ret == ZOK)
     {
-        printf("Updated node %s successfully.\n", path);
+        return true;
+        // printf("Updated node %s successfully.\n", path);
     }
     else
     {
         fprintf(stderr, "Failed to update node: %s\n", zerror(ret));
-        exit(-1);
+        return false;
     }
 }
 
 // 删除节点
-void ZookeeperClient::delete_node(const char *path)
+bool ZookeeperClient::delete_node(const char *path)
 {
     // 删除名为path的节点
     int ret = zoo_delete(zh, path, -1);
     if (ret == ZOK)
     {
+        return true;
         // printf("Deleted node %s successfully.\n", path);
     }
     else
     {
         fprintf(stderr, "Failed to delete node: %s\n", zerror(ret));
-        exit(-1);
+        return false;
     }
 }
 

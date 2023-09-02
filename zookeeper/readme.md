@@ -34,16 +34,16 @@
         @param path: zk节点路径
         @param data: 存储数据
     */
-    void create_node(const char *path, const char *data);
+    bool create_node(const char *path, const char *data);
 
     // 读取节点
     std::string read_node(const char *path);
 
     // 更新节点
-    void update_node(const char *path, const char *data);
+    bool update_node(const char *path, const char *data);
 
     // 删除节点
-    void delete_node(const char *path);
+    bool delete_node(const char *path);
 
     /*
         brief 获取分布式锁, 需保证zksever中lockpath存在否则异常

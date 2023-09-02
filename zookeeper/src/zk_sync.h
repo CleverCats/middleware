@@ -28,16 +28,16 @@ public:
     ~ZookeeperClient();
 
     // 创建节点
-    void create_node(const char *path, const char *data);
+    bool create_node(const char *path, const char *data);
 
     // 读取节点
     std::string read_node(const char *path);
 
     // 更新节点
-    void update_node(const char *path, const char *data);
+    bool update_node(const char *path, const char *data);
 
     // 删除节点
-    void delete_node(const char *path);
+    bool delete_node(const char *path);
 
     // 获取分布式锁
     void lock(std::string lockpath = "/lock");
