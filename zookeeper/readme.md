@@ -2,7 +2,7 @@
 
 ## 功能
     一、zookeeper c/c++ crud非异步接口的封装
-    二、基于临时顺序节点分布式可重入锁接口的实现保证
+    二、基于临时顺序节点分布式可重入锁接口的实现
 
 ## zookeeper_c依赖安装
     - wget http://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz
