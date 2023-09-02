@@ -5,22 +5,22 @@
     二、基于临时顺序节点分布式可重入锁接口的实现保证
 
 ## zookeeper_c依赖安装
-  wget http://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz
-  cp zoo_sample.cfg zoo.cfg
-  cd zookeeper-3.4.10/src/c 
-  sudo ./configure && make && make install
+    - wget http://archive.apache.org/dist/zookeeper/zookeeper-3.4.10/zookeeper-3.4.10.tar.gz
+    - cp zoo_sample.cfg zoo.cfg
+    - cd zookeeper-3.4.10/src/c 
+    - sudo ./configure && make && make install
 
 ## 项目编译
-  mkdir build
-  cd build
-  cmake .. && make
+    - mkdir build
+    - cd build
+    - cmake .. && make
 
 # 链接路径
-  .so zookeeper/lib
-  .h  zookeeper/src
+    - .so zookeeper/lib
+    - .h  zookeeper/src
 
 # 接口使用
-  #include "zk_sync.h"
+    - #include "zk_sync.h"
 
 # 接口
 ```cpp
