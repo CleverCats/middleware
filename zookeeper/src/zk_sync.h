@@ -22,7 +22,7 @@ private:
 
 public:
     // 初始化zookeeper客户端
-    ZookeeperClient(const char *host);
+    ZookeeperClient(const char *host, int timout = 30000);
 
     // 关闭zookeeper客户端
     ~ZookeeperClient();
@@ -31,7 +31,7 @@ public:
     void create_node(const char *path, const char *data);
 
     // 读取节点
-    void read_node(const char *path);
+    std::string read_node(const char *path);
 
     // 更新节点
     void update_node(const char *path, const char *data);
@@ -44,7 +44,7 @@ public:
 
     // 解锁
     void unlock(std::string lockpath = "/lock");
-    
+
 private:
      // 处理锁事件
     static void lock_watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx);
