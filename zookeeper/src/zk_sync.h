@@ -39,15 +39,16 @@ public:
     // 删除节点
     void delete_node(const char *path);
 
-    // 处理锁事件
-    static void lock_watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx);
-
     // 获取分布式锁
     void lock(std::string lockpath = "/lock");
 
     // 解锁
     void unlock(std::string lockpath = "/lock");
+    
 private:
+     // 处理锁事件
+    static void lock_watcher(zhandle_t *zh, int type, int state, const char *path, void *watcherCtx);
+    
     // 获取加锁条件
     bool check_lock(std::thread::id tid, std::string lockpath = "/lock");
 };
