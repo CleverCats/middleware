@@ -15,14 +15,12 @@
     - cd build
     - cmake .. && make
 
-# 链接路径
-    - .so zookeeper/lib
-    - .h  zookeeper/src
-
-# 接口使用
-    - #include "zk_sync.h"
-
+# 链接
+    - .L./lib 
+    - .I./src 
+    
 # 接口
+    - #include "zk_sync.h"
 ```cpp
     /*
         brief 初始化zookeeper客户端
