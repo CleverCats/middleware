@@ -15,7 +15,7 @@ private:
 public:
     void msg_push()
     {
-        cout << "==== tid: " << std::this_thread::get_id() << " producer runing ====" << endl;
+        cout << " ==== tid: " << std::this_thread::get_id() << " producer runing ====" << endl;
         for (int i = 0; i < 100; ++i)
         {
             zk.lock();
@@ -26,7 +26,7 @@ public:
     }
     void msg_get()
     {
-        cout << "==== tid: " << std::this_thread::get_id() << " consumer runing ====" << endl;
+        cout << " ==== tid: " << std::this_thread::get_id() << " consumer runing ====" << endl;
         while (true)
         {
             zk.lock();

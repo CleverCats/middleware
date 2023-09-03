@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
         sleep(3);
         zk.lock();
         sleep(3);
-        std::cout <<++k <<" ======== c_1: get lock thread ======" << std::endl;
+        std::cout <<++k <<" ======== c_1: get lock ======" << std::endl;
         zk.unlock();
     }
     
