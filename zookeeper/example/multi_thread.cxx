@@ -5,7 +5,7 @@
 #include <list>
 #include "zk_sync.h"
 using namespace std;
-#define HOST "60.204.204.220:2181" // 服务器地址和端口
+#define HOST "192.168.1:2181" // 服务器地址和端口
 ZookeeperClient zk(HOST);
 class msgQueue
 {
