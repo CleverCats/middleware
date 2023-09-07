@@ -1,7 +1,7 @@
 #include "zk_sync.h"
 #include <iostream>
-// 常量
-#define HOST "192.168.1:2181" // 服务器地址和端口
+
+#define HOST "60.204.204.220:2181" // 服务器地址和端口
 int main(int argc, char const *argv[])
 {
     ZookeeperClient zk(HOST);
@@ -10,8 +10,8 @@ int main(int argc, char const *argv[])
     while (true)
     {
         zk.lock();
-        sleep(1);
-        std::cout <<++k <<" ======== c_2: get lock thread ======" << std::endl;
+        std::cout <<++k <<" ======== c_2: get lock ======" << std::endl;;
+        sleep(10);
         zk.unlock();
     }
 

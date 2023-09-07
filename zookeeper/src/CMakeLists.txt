@@ -1,4 +1,4 @@
-add_library(zksync SHARED zk_sync.cxx)
+add_library(zksync SHARED zk_sync_crud.cxx zk_sync_lock.cxx)
 
 target_link_libraries(zksync
     PUBLIC pthread 

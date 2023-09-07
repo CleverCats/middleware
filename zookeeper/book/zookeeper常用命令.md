@@ -1,3 +1,4 @@
+```shell
 Zookeeper的常用命令有：
 [定位 find ./ -name 'zkServer.sh']
 启动Zookeeper服务：./zkServer.sh start
@@ -14,4 +15,4 @@ Zookeeper客户端常用命令有：
 获取节点值：get /节点path
 设置节点值：set /节点path value
 删除单个节点：delete /节点path
-您可以根据具体需求使用这些命令来操作Zookeeper。
+```

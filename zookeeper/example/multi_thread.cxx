@@ -5,7 +5,7 @@
 #include <list>
 #include "zk_sync.h"
 using namespace std;
-#define HOST "192.168.1:2181" // 服务器地址和端口
+#define HOST "60.204.204.220:2181" // 服务器地址和端口
 ZookeeperClient zk(HOST);
 class msgQueue
 {
@@ -16,7 +16,7 @@ public:
     void msg_push()
     {
         cout << " ==== tid: " << std::this_thread::get_id() << " producer runing ====" << endl;
-        for (int i = 0; i < 100; ++i)
+        for (size_t i = 0; i < 10000; ++i)
         {
             zk.lock();
             msgque.push_back(i);
@@ -27,7 +27,7 @@ public:
     void msg_get()
     {
         cout << " ==== tid: " << std::this_thread::get_id() << " consumer runing ====" << endl;
-        while (true)
+        for(size_t i = 0; i < 12000; ++i)
         {
             zk.lock();
             // cout << "==== tid: "<<std::this_thread::get_id()<<" get lock and sleep ====" << endl;

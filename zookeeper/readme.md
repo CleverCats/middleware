@@ -37,8 +37,9 @@
         brief 创建持久化节点
         @param path: zk节点路径
         @param data: 存储数据
+        @param statu: 节点类型
     */
-    bool create_node(const char *path, const char *data);
+    bool create_node(const char *path, const char *data, int statu=0);
 
     // 读取节点
     std::string read_node(const char *path);

@@ -1,16 +1,16 @@
 #include <iostream>
 #include <assert.h>
 #include "zk_sync.h"
-// 常量
-#define HOST "192.168.1:2181" // 服务器地址和端口
+
+#define HOST "60.204.204.220:2181" // 服务器地址和端口
 int main(int argc, char const *argv[])
 {
     ZookeeperClient zk(HOST);
     bool res = false;
-    res = zk.create_node("/test", "");
+    res = zk.create_node("/test", "", 0);
     assert(res);
 
-    res = zk.create_node("/test/tmp", "hellow");
+    res = zk.create_node("/test/tmp", "hellow", 1);
     assert(res);
     std::cout<<"===== creat node successfully ====="<<std::endl;
 
